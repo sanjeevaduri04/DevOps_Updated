@@ -1,2 +1,3 @@
 
  Ansible is a configuration management tool
+ Recently it was accuired by redhat
