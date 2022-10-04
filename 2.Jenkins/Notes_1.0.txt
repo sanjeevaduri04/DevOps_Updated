@@ -1,0 +1,178 @@
+Build Triggers:-
+--------------
+
+- When the project should be built?
+- Generally organizations follow two types of builds
+
+ Day Builds:
+  Builds done during active development
+Two options:
+ - Build for every change pushed by a developer (web_hooks)
+   - The build will trigger when only the developer commit the code.
+
+ - Build for every one hour or two hours in active working timings (poll_scm)
+   - Build will trigger when poll scm found any new commit by developer in one hour or two hours.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+We are supposed to give feedback to developer on their commit i.e. if the build is passed, unit tests are passed and code coverage is ok, Static Code Analysis etc..
+Generally day builds are on a different branch (develop, sprint-n-develop etc…)
+
+- Nightly Builds (production release):
+  - Consolidated build for all the work done by dev team(s) in one day
+  - Build once in a day (Scheduled when no development )
+  - Build should
+      - Build the code
+      - Unit tests
+      - Static code analysis
+      - Code Coverage
+- Run automated system tests and performance tests which require application to be deployed.
+- Tests might be developed using test automation tools like
+   - Selenium
+   - JMeter
+   - Postman
+   - Loadrunner
+Nightbuilds on different branch (RELEASE_v1.0.0_SPRINTn)
+
+For more info:-
+-------------
+
+https://directdevops.blog/2022/05/14/devops-classroomnotes-14-may-2022/
+
+-------------------------------------------------------------------------------------------------------------------------
+Jenkins Pipelines
+- Pipeline as a Code:
+   - Build steps expressed in the format of code
+   - Jenkins has developed a Domain Specific Language (DSL) based on Groovy Language.
+   - Lot of other CI/CD tools are also based on pipelines as a Code
+         - Azure DevOps – YAML
+         - GitLab – YAML
+         - GitHub Actions – YAML
+Advantages of Pipeline as a code:
+  - This pipeline will be part of source code repo, i.e. version will be maintained
+  - Branch wise build changes can be handled easily
+
+Jenkinsfile:
+This is the file in which we define pipelines or build steps
+Earlier the name was supposed to be Jenkinsfile, now it can be any file
+
+-----------------------------------------------------------------------------------------------------------------
+
+Pipeline Types:
+
+ - Scripted Pipeline:
+         It is procedure oriented and we can directly use groovy code over here
+ - Declarative Pipeline
+         This is declarative and easy to work with.
+
+ Scripted Pipeline:-
+ ------------------        
+
+Syntax of scripted pipeline:-
+----------------------------
+
+node('<LABEL>') {
+    stage('<Build-stage-1') {
+        // build steps
+    }
+    ..
+    ..
+    stage('<Build-stage-n') {
+
+    }
+}
+
+Scripted Pipelines
+ Advantages:
+ - Generally few sections and less specifications needed
+ - Capability to use more procedural code
+ - More like create a program
+ - More flexibility to do custom operation
+
+DisadvantageS:
+- More programming required in general
+- Syntax checking limited to Groovy language and environment
+- Looks different from traditional Jenkins model
+- More complex
+
+Structure:-
+
+ Node:
+  - Stage 
+     - step
+
+
+     Example:-
+     --------
+
+  node('JDK8') {
+      stage('SourceCode') {
+        // get the code from git repo on the branch sprint1_develop
+        git branch: 'sprint1_develop', url: 'https://github.com/KhajasCICDSamples/game-of-life.git'
+    }
+
+      stage('Build the code') {
+        sh 'mvn clean package'
+    }
+
+     stage('Archiving and Test Results') {
+        junit '**/surefire-reports/*.xml'
+        archiveArtifacts artifacts: '**/*.war', followSymlinks: false
+    }
+
+}
+
+------------------
+
+Declarative Pipelines:-
+-----------------------
+
+Advantages:
+- More structure
+- More capability to declare what is needed
+- Can be generate from Blue Ocean graphical interface
+- Contains sections that map to tradional jenkins
+- Better syntax checking and error identification
+
+Disadvantage:
+- Still evolving
+- Iterative logic is less supported
+
+Example:-
+--------
+
+pipeline {
+    agent { label 'JDK8' }
+    triggers { pollSCM('* * * * *') }
+    stages {
+        stage('SourceCode') {
+            steps {
+                git branch: 'sprint1_develop', url: 'https://github.com/KhajasCICDSamples/game-of-life.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Archive and Test Results') {
+            steps {
+               junit '**/surefire-reports/*.xml'
+               archiveArtifacts artifacts: '**/*.war', followSymlinks: false
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+=============================================================================================================================
