@@ -1,2 +1,128 @@
- 
-  Jenkins is a popular CI/CD Tool
+ Introduction:-
+ --------------
+- Jenkins is a popular CI/CD Tool
+- Maintain a single code repository for a project
+- Integrate your application every time/frequently whenever developer commits
+- Ensure you have automated unit tests such as smoke tests, sanity tests
+- Automate the build and execute the tests, showcase the test results.
+- Also check code quality
+
+We need a tool which can detect when the code is commited to the repository and execute the tests and also notify the results. There are lot of tools for this
+Azure DevOps (Formerly called as VSTS):
+From Microsoft
+Bamboo:
+From Atlassian
+GitLab
+GitHub Action
+Jenkins
+TeamCity
+Travis CI
+
+
+=======================================================================================================================================
+
+Installation of Jenkins:-
+-------------------------
+
+https://directdevops.blog/2022/05/02/devops-classroomnotes-02-may-2022/
+
+
+======================================================================================================================================
+
+Cloning of  code:-
+------------------
+1) Executing command in 'command' section,
+2) By using 'Plugin'
+
+- Jenkins will provide User Interfaces to help us increase the pace of creating cicd pipelines. These User Interfaces are added to jenkins by a concept called as plugins.
+- While installing jenkins we have executed install plugins
+- The UI below is from a plugin called as git plugin
+
+===================================================================================================================================
+
+Building/Packaging the Code:-
+---------------------------
+For your organization project:
+How to download the dependencies
+How to build the code and what are the tools used?
+How to run unit tests and generate the unit test report
+How to run the Code Coverage and generate the report
+How to run the Static Code Analysis and generate the report
+How to create the Quality Gate to fail the build if the code coverage or static code anlaysis is not acceptable (optional)
+
+Responsibilities of the DevOps Engineer on topics discussed so far
+
+1. Get the latest code.
+2. Build code.
+3. Run unit tests, code coverage, static code analysis and generate reports.
+4. If any of the above fails reject the commit done by developer
+5. If all of the above passed, accept the commit and proceed to next steps.
+
+========================================================================================================================================
+Building Java Code with Maven:-
+------------------------------
+
+Maven is a software project management tool (build, dependency management tool)
+
+For installing maven follow the below link:-
+--------------------------------------------
+
+https://directdevops.blog/2022/05/11/devops-classroomnotes-11-may-2022/
+
+The developers will create the pom.xml file, but we need to understand
+
+When building the java project:-
+------------------------------
+compile the code
+run the unit tests
+create a package
+
+We can combine goals:-
+--------------------
+mvn clean package
+mvn compile test package
+
+In Maven we have goals/build phase
+compile => Creates .class files
+test => runs the unit tests and generates the reports. This will also try to compile
+package => creates the jar/war file. This will execute compile + test
+install
+deploy
+clean => remove the target folder
+
+===================================================================================================================================
+Configuring Maven in Jenkins
+
+https://directdevops.blog/2022/05/12/devops-classroomnotes-12-may-2022/
+
+- Set the maven version in - Manage jenkins - Global tool config - build now.
+
+Define post build actions:-
+---------------------------
+
+publish junit test result reports -> where to store (Give the path)
+Archive the Artifacts -> where to store (Give the path)
+
+
+=====================================================================================================================================
+In Jenkins the traditional way of creating project/job is called as Free Style
+
+The Free Style Jenkins Job Contains the following sections
+- General
+   Basic information about project
+- Source Code Management:
+   Section for configuring SCM
+- Build Triggers:
+   Section for configuring when to start the build
+- Build Environment:
+   Has information and options to control workspace and logs
+- Build:
+   This is section used to configure the builds
+- Post Build:
+   Actions to be performed after the build is complete
+
+-------------------------------------------------------
+
+https://directdevops.blog/2022/05/13/devops-classroomnotes-13-may-2022/
+
+=======================================================================================================================================
