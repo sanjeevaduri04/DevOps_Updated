@@ -1,0 +1,113 @@
+The inputs provided to the Resources/Datasources is called as arguments and the outputs are referred as attributes
+
+ Inputs to Resources/Datasources -------------> arguments
+
+ Outputs    -----------------> Attributes
+
+General info:-
+-------------
+Provider = aws
+Resource = vpc, subnet
+
+When terraform commands are executed generally they scan all the .tf files in the directory and execute the configuration.
+
+----------------
+#############################################################################################
+
+Lets define the provider and vpc definition
+
+provider "aws" {
+    access_key  = "LKJLKSKLJDALDJLKSADSLA"
+    secret_key  = "lksdfjdlkasfjlsadfjlksdafjlksdafjdallksafj"
+    region      = "ap-south-1"
+}
+
+# lets try to define the resource for the vpc
+resource "aws_vpc" "myvpc" {
+    cidr_block = "192.168.0.0/16"
+
+    tags = {
+      "Name" = "from-tf"
+    }
+
+}
+
+#############################################################################################
+
+- terraform apply
+
+- Now lets try to add "web1" and "web2" subnets Refer Here for the subnet resource documentation
+- The vpc id is the attribute of the resource block to access attributes the syntax is <PROVIDER>_<TYPE>.<NAME>.<ATTRIBUTE-NAME>
+- We have added the following for the subnets
+----------------------------------------------------
+
+
+# lets create web1 subnet
+
+#############################################################################################
+
+resource "aws_subnet" "web1" {
+    vpc_id              = aws_vpc.myvpc.id
+    cidr_block          = "192.168.0.0/24"
+    availability_zone   = "ap-south-1a"
+
+    tags                = {
+      "Name"            = "web1-tf"
+    }
+
+}
+
+# lets create web2 subnet
+resource "aws_subnet" "web2" {
+    vpc_id              = aws_vpc.myvpc.id
+    cidr_block          = "192.168.1.0/24"
+    availability_zone   = "ap-south-1b"
+
+    tags                = {
+      "Name"            = "web2-tf"
+    }
+
+}
+
+
+#############################################################################################
+
+Now lets create db1 and db2 subnet
+----------------------------------
+
+# lets create db1 subnet
+
+#############################################################################################
+resource "aws_subnet" "db1" {
+    vpc_id              = aws_vpc.myvpc.id
+    cidr_block          = "192.168.2.0/24"
+    availability_zone   = "ap-south-1a"
+
+    tags                = {
+      "Name"            = "db1-tf"
+    }
+
+}
+
+# lets create db2 subnet
+resource "aws_subnet" "db2" {
+    vpc_id              = aws_vpc.myvpc.id
+    cidr_block          = "192.168.3.0/24"
+    availability_zone   = "ap-south-1b"
+
+    tags                = {
+      "Name"            = "db2-tf"
+    }
+
+}
+
+#############################################################################################
+
+- Now validate and apply
+
+- We are able to see 4 subnets( web1,web2,db1,db2 ) under the 1 vpc (myvpc) 
+
+ https://directdevops.blog/2022/05/19/devops-classroomnotes-19-may-2022/
+
+
+ =============================================================================================
