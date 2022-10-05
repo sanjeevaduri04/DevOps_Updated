@@ -1,2 +1,241 @@
 
- Terraform is Infra-Privisioning tool
+ Terraform is a Infra-Provisioning tool
+
+Terraform:-
+----------
+
+Software isn’t done until you deliver it to the customers.
+What Terraform Does?
+
+- Terraform create virtual servers (Cloud/Vmware/Hyperversion etc...), Infra provisioning.
+
+- The idea behind IAC is that you write & execute the code to 
+  - define
+  - deploy 
+  - update and 
+  - destroy your infrastructure
+
+
+  Basic Syntax:-
+  -------------
+
+  # AWS
+resource "aws_instance" "app" {
+    instance_type       = "t2.micro"
+    ami                 = "ami-892347389247"
+    availability_zone   = "us-west-2a"
+}
+
+# Azure 
+resource "azurerm_vm" "app" {
+    size                = "Standard_B1s"
+    vmimage             = "ubuntu2004LTS"
+    location            = "eastus"
+}
+
+#vmware
+
+resource "vmware_vm" "app"  {
+    cpu     = "2"
+    ram     = "4GB"
+    image   = "ubuntu"  
+}
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+The major concepts of terraform are
+  Provider:
+           - Where we can create infrastructure
+  Resource:
+           - What has to be created
+  DataSource:
+           - Query information about anything in the Provider
+
+
+----------------------------------------------------------------------------------------------------------------------
+
+Relevance of Terraform in CI/CD Pipeline
+
+- VCS
+- Build/Package
+- Terraform--------------->
+                              - System Test Environment
+                              - Performance Test Environment
+                              - UAT/Pre-Prod 
+                              - Production
+
+
+"https://directdevops.blog/2022/05/17/devops-classroomnotes-17-may-2022/"
+
+----------------------------------------------------------------------------------------------------------------------
+
+Installing Terraform:-
+--------------------
+
+Install the terraform in ubuntu
+
+visit the link:-
+---------------
+Refer Here 'https://learn.hashicorp.com/tutorials/terraform/install-cli'
+
+---------------------------------------
+
+- Create an S3 Bucket in AWS manually
+
+- Create an S3 Bucket in AWS by using Terraform
+
+ IAC (Infrastructure as a code):-
+ -------------------------------
+
+ provider "aws" {
+    access_key  = "<your-access-key>"
+    secret_key  = "<your-secret-key>"         ----------- Provider block
+    region      = "ap-south-1"
+}
+
+resource "aws_s3_bucket" "b" {
+  bucket = "qt-tf-s3-1"                       ------------ Resource block
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
+
+------------------------------------------------
+
+- Provider -----> is where to create infra 
+- Resource -----> is what we are trying to create.
+
+ In the above case
+    - Provider: AWS
+    - Resource: S3 Bucket
+
+    In AWS to connect to aws account we had to login using email and password.
+       - Generally Provider configuration involves "authentication" and it depends on how provider allows it.
+       - Refer Here for the terraform providers
+       - AWS Provider documentation
+
+
+------------
+
+Commands to execute:-
+-------------------
+
+-  terraform --help
+-  terraform init 
+-  terraform validate
+-  terraform plan
+-  terraform apply  (In CLI it shows the status like creating.... to creation complete)
+-  terraform destroy (In CLI it shows the status like destroying...... to destroyed )
+
+--------------
+
+Terraform Language
+ - Terraform configuration can be expressed in
+ - HCL/Terraform Language
+ - JSON
+
+ --------------
+
+ The two major elements in the Terraform language are
+   Arguments:
+    Assigns a value to a particular name bucket = "qt-tf-s3-1"
+   Blocks:
+     A block is container for other content
+     Three major blocks of terraform are
+          provider block
+          resource block
+          datasource block
+
+--------------------------------
+
+Provider Block:
+Basic Syntax:
+
+provider "<provider-name>" {
+    <argument-1>
+    <argument-2>
+    ..
+    <argument-n>
+}
+
+ex:-
+
+provider "aws" {
+    access_key  = "LKJLKSKLJDALDJLKSADSLA"
+    secret_key  = "lksdfjdlkasfjlsadfjlksdafjlksdafjdallksafj"
+    region      = "ap-south-1"
+}
+
+
+-------------
+
+Resource Block
+   Basic Syntax:
+
+   resource "<PROVIDER>_<TYPE>" "<NAME>" {
+    <argument-1>
+    <argument-2>
+    ..
+    <argument-n>
+}
+
+ex:-
+---
+
+resource "aws_s3_bucket" "b" {
+  bucket = "qt-tf-s3-1"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
+
+
+https://directdevops.blog/2022/05/18/devops-classroomnotes-18-may-2022/
+
+===============================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           
+
