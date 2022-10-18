@@ -1,2 +1,327 @@
 
  Grafana is a monitoring tool
+
+   Grafana Introduction:-
+   --------------------
+
+   - Purpose
+
+     - Grafana is an open-soource platform for data visualization, monitoting and analysis.
+     - Grafana allows users to create dashboards with panels, each representing specific metrics over a set time-frame.
+
+
+                                           Monitoring
+
+                    Analysis                Grafana                   visualization
+                                           
+                                            Query
+
+   - Grafana is designed to work as a UI for anlyzing and visualizing metrics such as system CPU, memory, disk and
+     I/O utilization.-
+
+    - For each data source, Grafana has a specific query editor that is customized for the features and capabilities that are includedin that data source.
+
+
+    Query Editor:
+
+    Query Editor for querying. Each data source has a different Query Editor customize for the specific data source,
+     meaning that the sysntax used varies according to the data source.
+
+
+   Visualization in Grafana are called panels and users can create a dashboard containing panels for different
+    data sources. Grafana supports.
+
+    - Graph
+
+    - singlestat
+
+    - Table
+
+    Syntax:-
+    ------
+
+    We have syntax/formula for add the Query
+    plugin name+_+metric name + { filter words }
+
+
+
+ For example:
+ -----------
+
+ cpu_idle{ip="10.33.54.33"}
+
+ "cpu" is the plugin name
+
+ "idle" is the metric name
+
+ "ip=xxx" is the filer words
+
+ 
+ cpu_util{scope_name=~".*oplatform.*"}
+
+ "cpu" is the plugin name
+
+ "util" is the metric name
+
+ "scope_name=~".*oplatform.*" is the filter words
+
+
+ ===============================================================================================
+
+
+ - Grafana users can make use of a large environment of ready-made dashboards for different data types and sources
+
+ - Grafana is a visualized GUI measurement tool. This document describes how to use the graph, singletat, and table panels.
+
+--------------------------------------
+
+
+Prometheus:-
+-----------
+
+ Introduction:-
+ -------------
+
+ Prometheus provides a functional query language called promQL (Prometheus Query Language) that lets the users
+ select and aggregate time series data in real time. The result of an expression can either be shown as a graph,
+ viewd as a tabular datas.
+
+
+  Visit link:- https://prometheus.io/docs/prometheus/latest/getting started/
+
+Common Charts:-
+-------------
+
+ After creating a dashboard, you can create charts as required.
+
+ Graph Settings:-
+ ---------------
+
+ You can add a graph when running the ADD ROW or ADD PANEL command.
+
+
+
+ 2.Configuring the graph (General)
+ 
+
+ Click panel Title, select Edit, and click general (the Metrics tab page is displayed by default) to modify
+the title.
+
+
+3. Configuring graph Metrics
+
+ Click Panel title. On the Edit that is displayed, select Data Source:
+
+ prometheus_mater, and click Add Query. Set search criteria. or example, if the ip address is cpu_idle
+ {ip=~"10.62.88.13"}, the CPU idle indicator of the host with the IP address 10.62.88.13 is queried.
+
+
+
+4. Configuring the graph - prometheus formula
+
+
+ Click the panel title, select HCW_prometheus from the data source drop-down list box, and click Add Query.
+ Enter the domain, indicator, host, time and formula, and click Query. The System automatically generates the 
+ query criteria that meet the formulae
+
+ system automatically generates the search condition min (cpu_idle{scope_name="cloudeye", ip=~"10.62.88.13"})
+
+
+   The following formulas are supported: 
+
+   max() Maximum value of the returned data
+   min() Minimum value of the returned data.
+   avg() average value of the returned data.
+   abs() Absolute value of the returned data.
+
+
+   absent(): if the parameter has no element, an empty vector is returned. If the parameter has
+             elements, the return value is the 1 element vector of 1.
+
+
+             visit link:- https://prometheus.io/docs/prometheus/latest/querying/functions/.
+
+
+
+5. Configuring graph - Axes
+
+
+ On this tab page, you can configure the horizontal and vertical axes of the graph. For example,  you can
+  configure whether to display the show parameter and set unit to the data type for statistics.
+
+
+  6. Configuring the graph - Legend (description)
+
+  The Statistical data is displayed in table.
+
+
+  7.Configure grap - display
+
+
+
+  4.2 singlestat Settings
+
+
+
+    1. Adding singlestat
+
+    When running the ADD ROW or ADD panel command, you can add a singlestat task.
+
+
+
+    Grafana is an open-source paltform for data visualization, monitoring and analysis. Grafana allows
+    users to create dashboards with panels, each representing specific metrics over a set time-frame. By using
+    Grafana, we can able to create and Configure dashboards for visualization. Based on query, we can change
+    our metric and visualize our graph.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
+                                              
