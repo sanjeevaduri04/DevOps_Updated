@@ -1,3 +1,32 @@
 
  Ansible is a configuration management tool
  Recently it was acquired by redhat
+
+Configuration Management (CM) has two methods:-
+-----------------------------------------------
+- PULL BASED CM: Nodes initate the communication to the CM Server
+- PUSH BASED CM: CM server will initiate the communication to the nodes.
+
+- Ansible is a push based tool
+- Chef is a pull based tool
+
+PUSH BASED CM (Configuration Management)
+In PUSH BASED CM, CM Server has admin credentials of the node and the details like ip adress/hostname to login and execute the declarative configuration.
+
+- 
+Ansible:-
+--------
+
+- Ansible is a push based CM.
+- Ansible maintains the list of nodes to be communicated and is referred as inventory.
+- To write the declarative configuation, Ansible used YAML and calls it as Playbook.
+
+ Ansible requirements:-
+ ---------------------
+ - Configuration Management Server in the case of ansible can be very light weight machine.
+ - Ansible logs in to the nodes and executes the declarative configuration & for that it requires python to be installed on the node.
+
+Approach:-
+--------
+- Make a note all the manual steps for deploying the application.
+- For each step find the command and convert that into declaration (Module).
