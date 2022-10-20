@@ -1,0 +1,407 @@
+Manual Steps:-
+------------
+
+sudo apt update
+sudo apt install openjdk-8-jdk -y
+sudo apt install tomcat9 -y
+wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war
+sudo cp gameoflife.war /var/lib/tomcat9/webapps/
+sudo systemctl restart tomcat9.service
+
+=================================================================================
+
+Playbook for above task:-
+-----------------------
+
+  become: yes
+  hosts: all
+  tasks:
+    - name: update ubuntu packages and install java 8
+      ansible.builtin.apt:
+        name: openjdk-8-jdk
+        update_cache: yes
+        state: present
+    - name: install tomcat9
+      ansible.builtin.apt:
+        name: tomcat9
+        state: present
+    - name: download the gameoflife war file
+      ansible.builtin.get_url:
+        dest: /var/lib/tomcat9/webapps/gameoflife.war
+        url: https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war
+    - name: restart tomcat9 service
+      ansible.builtin.systemd:
+        enabled: yes
+        name: tomcat9
+        state: restarted
+
+
+        -------------------------------------
+
+$ sudo apt update
+$ sudo apt install apache2 -y
+
+# echo '<h1> Hello </h1>' > /var/www/html/info.html
+
+=> http://<public-ip> 
+=> http://<public-ip>/info.html
+
+name: Installing apache2 software
+hosts: all
+become: yes
+tasks:
+  - name: Update and install apache2
+    apt:
+      name: apache2
+      update_cache: yes
+      state: present
+
+ ======================================================================
+
+Manual steps:
+
+ sudo yum install httpd -y
+sudo yum install php php-mysql
+# create a file in the path /var/www/html/info.php with content
+# <?php phpinfo( ); ?>
+sudo systemctl enable httpd
+sudo systemctl start httpd
+
+Playbook:-
+---------
+
+---
+- name: installing httpd and php packages
+  become: yes
+  hosts: all
+  tasks:
+    - name: install httpd
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+    - name: install php packages
+      ansible.builtin.yum:
+        name: 
+          - php
+          - php-mysql
+        state: present
+    - name: copy the info.php
+      ansible.builtin.copy:
+        src: info.php
+        dest: /var/www/html/info.php
+    - name: ensure the apache service is running and enabled
+      ansible.builtin.systemd:
+        name: httpd
+        enabled: yes
+        state: started
+
+===========================================================================================================================
+
+        Visit the link:-
+        -------------
+        https://directdevops.blog/2022/08/06/devops-classroomnotes-06-aug-2022/
+
+        
+-------------------------------------------------------------------------------------------------------------------------------
+
+Ansible Variables
+-----------------
+ - Variables in Ansible can be declared in
+     - Playbooks
+     - Inventory files
+     - Many other locations
+
+
+The problem with this approach is, it is not idempotent. So the command will be executed every time ansible playbook is executed.
+
+ - To solve this problem,
+     - We can use lookups
+     - Registering varaibles
+
+
+ For more info:-
+ --------------
+ https://directdevops.blog/2022/08/07/devops-classroomnotes-07-aug-2022/
+
+
+ -------------------------------------------------------------------------------------------------------------------------
+
+ Ansible playbook supports loops.
+
+ What is loop?
+ - Often you’ll want to do many things in one task, such as create a lot of users, install
+    a lot of packages, or repeat a polling step until a certain result is reached.
+
+ ---
+- name: learning loops
+  become: no
+  hosts: all
+  tasks:
+    - name: create files
+      file: 
+        path: "{{ item }}"
+        state: touch
+      loop:
+        - /tmp/1.txt
+        - /tmp/2.txt
+        - /tmp/3.txt
+
+------------------------------------------------------------------------------------------------------
+
+lists from variables:-
+---------------------
+
+- name: learning loops
+  become: no
+  hosts: all
+  vars:
+    files:
+      - /tmp/4.txt
+      - /tmp/5.txt
+      - /tmp/6.txt
+  tasks:
+    - name: create files
+      file: 
+        path: "{{ item }}"
+        state: touch
+      loop: "{{ files }}"
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+debug module in ansible:-
+-----------------------
+
+- name: learning loops
+  become: no
+  hosts: all
+  vars:
+    files:
+      - /tmp/4.txt
+      - /tmp/5.txt
+      - /tmp/6.txt
+  tasks:
+    - name: using debug module
+      ansible.builtin.debug:
+        msg: " Creating files {{ files }}"
+    - name: create files
+      ansible.builtin.file: 
+        path: "{{ item }}"
+        state: touch
+      loop: "{{ files }}"
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+      Debug with variables:-
+      --------------------
+ 
+ ansible-playbook -i testhosts loopdemo.yml -e "files=['/tmp/9.txt','/tmp/10.txt']"
+
+ Ansible lookups
+   - Ansible lookups will pull the data based on the lookup plugin we use 
+
+
+   ---
+- name: learning lookups
+  become: no
+  hosts: all
+  tasks:
+    - name: print all shell files
+      debug:
+        msg: "{{ item }}"
+      with_fileglob:
+        - /tmp/test/*.sh
+
+
+  * Lets give execute permissions to all shell files
+
+  ---
+- name: learning lookups
+  become: no
+  hosts: all
+  tasks:
+    - name: print all shell files
+      file:
+        path: "{{ item }}"
+        mode: "+x"
+      with_fileglob:
+        - /tmp/test/*.sh
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ansible Handlers:
+---
+- name: Verify apache installation
+  hosts: webservers
+  vars:
+    remote_user: root
+    http_port: 80
+    max_clients: 200
+  tasks:
+    - name: Ensure apache is at the latest version
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: Write the apache config file
+      ansible.builtin.template:
+        src: /srv/httpd.j2
+        dest: /etc/httpd.conf
+      notify:
+      - Restart apache
+
+    - name: Ensure apache is running
+      ansible.builtin.service:
+        name: httpd
+        state: started
+
+  handlers:
+    - name: Restart apache
+      ansible.builtin.service:
+        name: httpd
+        state: restarted
+
+        Handlers are used in the roles.
+
+-------------------------------------------------------------------------------
+
+Ansible Facts
+
+For more info:-
+-------------
+
+- https://directdevops.blog/2022/08/10/devops-classroomnotes-10-aug-2022/
+
+- https://directdevops.blog/2022/08/11/devops-classroomnotes-11-aug-2022/
+
+- Ansible Templates and Ansible Inventory , Dynamic inventory
+
+  - https://directdevops.blog/2022/08/12/devops-classroomnotes-12-aug-2022/
+
+- Roles
+  ------
+
+  - ansible-galaxy install <role-name>
+  - ansible-galaxy install geerlingguy.mysql
+
+  ------------------
+
+  ---
+- name: use existing role
+  become: yes
+  hosts: dbservers
+  roles:
+    - role: geerlingguy.mysql
+
+    --------------------
+
+    In roles we have different folders
+
+      - defaults: for default variable values
+      - files: all the static files of the role
+      - templates: all the .j2 files containing templates
+      - tasks: all the tasks that need to be executed
+      - handlers: all the handlers
+      - vars: for variables
+      - meta: is metadata about role
+
+    For more info:-
+     
+     - Visit official doc 
+     - https://directdevops.blog/2022/08/13/devops-classroomnotes-13-aug-2022/
+
+     -------------------------
+
+     Ansible Vault
+      - Refer Here for Features of Ansible Vault.
+      - Refer Here the following blog for playing with ansible vault
+
+     Ansible Tower
+      - The video for this will be shared and use that as a reference to understand ansible tower
+
+    Ansible Integration with Jenkins:-
+    ---------------------------------
+        - Ansible Control Node will be a node in Jenkins.
+        - While creating Jenkins pipeline, we use the node where ansible is installed, get the latest playbooks to install the 
+           software in various environments and call the ansible-playbook command line from jenkins pipelines
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
