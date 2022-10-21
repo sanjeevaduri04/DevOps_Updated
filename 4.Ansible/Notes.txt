@@ -1,3 +1,163 @@
 
  Ansible is a configuration management tool
  Recently it was acquired by redhat
+
+Configuration Management (CM) has two methods:-
+-----------------------------------------------
+- PULL BASED CM: Nodes initate the communication to the CM Server
+- PUSH BASED CM: CM server will initiate the communication to the nodes.
+
+- Ansible is a push based tool
+- Chef is a pull based tool
+
+PUSH BASED CM (Configuration Management)
+In PUSH BASED CM, CM Server has admin credentials of the node and the details like ip adress/hostname to login and execute the declarative configuration.
+
+- 
+Ansible:-
+--------
+
+- Ansible is a push based CM.
+- Ansible maintains the list of nodes to be communicated and is referred as inventory.
+- To write the declarative configuation, Ansible used YAML and calls it as Playbook.
+
+ Ansible requirements:-
+ ---------------------
+ - Configuration Management Server in the case of ansible can be very light weight machine.
+ - Ansible logs in to the nodes and executes the declarative configuration & for that it requires python to be installed on the node.
+
+
+Ansible Approach:-
+-----------------
+Find all the manual steps to deploy application
+Group steps into some common activity and consider this for playbook.
+For each manual step create a task and find the right module of ansible.
+
+Lets install an application which runs on tomcat server:-
+-------------------------------------------------------
+I need a linux server
+  - Ubuntu 20.04
+Then execute the following commands
+
+sudo apt update
+sudo apt install openjdk-8-jdk -y
+sudo apt install tomcat9 -y
+wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war
+sudo cp gameoflife.war /var/lib/tomcat9/webapps/
+sudo systemctl restart tomcat9.service
+
+Lets figure out modules
+
+- apt in ansible.
+- wget in ansible.
+- cp in ansible.
+- systemctl in ansible 
+
+---------------
+
+Is a data definition/expression format.
+The data which we define is name & value pairs
+YAML File Extension => .yaml or .yml extension
+Refer Here for the official docs
+Structure of ansible playbook
+
+-------------------------------------------------------------------------------
+
+---
+- name: <describe your playbook here>
+  tasks:
+    - name: <what this task is about>
+      <module>:
+         <module-parameter-1>: <module-value-1>
+         ..
+         <module-parameter-n>: <module-value-n>
+         state: <value (present)>
+    - name: <what this task is about>
+      <module>:
+         <module-parameter-1>: <module-value-1>
+         ..
+         <module-parameter-n>: <module-value-n>
+         state: <value (present)>
+
+         --------------------------------------------------------------------------
+         
+ Lets create a user called as devops with password as devops on both Anisble control Node and Node-1 and Node-2
+ --------------------------------------------------------------------------------------------------------------
+
+* Do the setup on each server 
+* enable password authenticat
+* create a devops user
+* add this user for sudo permissions without prompting for password.
+
+For more info visit link:- 
+https://directdevops.blog/2022/07/30/devops-classroomnotes-30-jul-2022/
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+- sudo apt update
+- sudo apt install software-properties-common
+- sudo add-apt-repository --yes --update ppa:ansible/ansible
+- sudo apt install ansible -y
+- ansible --version
+
+Now lets create a inventory file called as hosts
+
+In Ansible we can execute the activity by using
+
+  adhoc command:
+   - Can execute any ansible module
+   - Good for rare activities
+   - history cannot be maintained
+
+    Ex:-
+    --
+       Adhoc command:
+        - ansible -m <module-name> -a <parameters&arguments> -i <inventory> all
+        - module-name => ansible.builtin.file
+          arguments:
+          state argument: touch
+          path: /tmp/1.txt
+        - ansible -m ansible.builtin.file -a 'path=/tmp/1.txt state=touch' -i all
+
+Playbook: declaring the whole deployment as a yaml file
+   - Good for automating activities used multiple times (frequently)
+   - Playbook can be version controlled, so we will have history of all of the changes done.
+
+   Ex:-
+   --
+ ---
+- name: learning playbooks
+  hosts: all
+  become: no
+  tasks:
+    - name: create a empty file
+      ansible.builtin.file:
+        path: /tmp/1.txt
+        state: touch
+
+
+Manual Steps:-
+------------
+
+- sudo apt update
+- sudo apt install openjdk-8-jdk -y
+- sudo apt install tomcat9 -y
+- wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war
+- sudo cp gameoflife.war /var/lib/tomcat9/webapps/
+- sudo systemctl restart tomcat9.service
+
+Visit link:-
+-----------
+
+"https://directdevops.blog/2022/08/03/devops-classroomnotes-03-aug-2022/"
+
+
+
+
+
+
+
+
+
+
+
