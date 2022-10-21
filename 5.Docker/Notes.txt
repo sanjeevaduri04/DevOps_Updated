@@ -1,2 +1,10 @@
 
  Docker is a containerization tool
+
+-What is Docker and why is it used?
+Docker is a software platform that allows you to build, test, and deploy applications quickly. 
+Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime.
+
+-Docker made is simple to create containers
+-Consider container as an isolated area with cpu, ram and network which makes application belive that it running on full blown os.
+-Since containers are light weight we can run many instances on the server.
