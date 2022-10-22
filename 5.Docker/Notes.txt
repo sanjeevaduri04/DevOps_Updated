@@ -174,7 +174,8 @@ server: tomcat
 runtime: java 8
 port 8080
 Download gameoflife into webapps https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war
-Refer Here for the tomcat image
+
+Refer Here for the tomcat image (https://hub.docker.com/_/tomcat)
 
 
 FROM tomcat:9.0.64-jdk8-temurin-focal
@@ -182,3 +183,126 @@ LABEL author=khaja
 LABEL why=forfun
 RUN curl https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war --output /usr/local/tomcat/webapps/gameoflife.war
 EXPOSE 8080
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Working with Dockerfile
+-----------------------
+
+ - Dockerfile is a text file that contains instructions on how to create docker images.
+   (A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image.)
+ - These commands are known as directives
+ - # This is comment
+   DIRECTIVE argument
+
+   Common Directives:
+   ------------------
+
+   FROM: (To pull the base image)
+      - This is used to set the base image/parent image
+      - This can be any image from Docker hub
+      - FROM <image>:<tag> if the tag is not mentioned latest tag will be applied/assumed by Docker image
+      - If you want to build the docker image from scratch then use FROM scratch
+
+   LABEL” 
+
+      - This is key-value pair used to add metadata to Docker Image
+        LABEL <KEY>=<VALUE>
+      - We can add multiple LABEL directives or multiple labels with space sepearted.
+
+   RUN:  (To execute the commands)
+
+      - This directive is used to execute the command during image build time.
+      - This will generally have application configuration/installation etc
+      - Any RUN command which impacts the storage a new layer will be created.
+
+   CMD:   (To provide defaults for an executing container)
+
+      - This directive will be executed when the container is created when no ENTRYPOINT directive exists
+      - If the CMD is not present in current image it will execute parents CMD directive
+      - Container will be in running state as long as the instructions in CMD are executing
+      - The CMD has two forms exec and shell form
+
+        "EXEC form"
+
+        CMD ["executable", "param1", ... , "paramn"]
+        CMD ["echo", "hello-world" ]
+
+
+        "SHELL FORM"
+
+        CMD executable param1 .. paramn
+        CMD echo hello-world
+   
+   
+   
+   EXPOSE: (Informs docker that the container listend on the specified network ports at runtime)
+
+     - This directive will expose the port of the container
+
+
+   ADD:
+    - This directive is used to copy files into docker image while building the image
+      Syntax   ADD <src> <dest>
+      For the ADD src can be local files as well as URL’s
+
+
+   COPY:
+    - This directive is used to copy files into docker image while building the image
+    - Syntax COPY <src> <dest>
+    - For COPY directive the source can be only "local files"
+                                                 -----------
+
+
+-----------------------------------------------------------------------------------------
+
+
+
+Lets start inspecting images
+----------------------------
+Docker inspect provides detailed information on constructs controlled by Docker.
+
+
+- Lets build a Docker image called as hello:0.1.0
+-------------------------------------------------
+
+   docker image build -t hello:0.1.0 . (command to build an image)
+
+- If we use scratch copying the files with kernel and executables is also our responsibility so for this session since we focus on building containers for software applications, choose the base image with necessary files is good choice.
+- Since we have built the image lets inspect it
+  docker image inspect hello:0.1.0
+
+- Now lets take a docker image as parent which has some files in it
+
+
+
+- lets build a new image hello:0.1.1
+------------------------------------
+  docker image build -t hello:0.1.1
+
+- lets inspect alpine image docker image inspect alpine:3.0
+- for changeset containing RUN directive and impact on docker image layers
+  (https://github.com/asquarezone/DockerZone/commit/1a28d1bcc325e6498564d5eab0c3d37a777c19a2)
+
+
+
+
+- lets build a new image hello:0.1.2
+------------------------------------
+  
+   docker image build -t hello:0.1.2
+- Now lets inspect hello:0.1.2 specifically layers
+
+"""Docker image is collection of image layers"""
+ - For docker container to work these layers should be combine to form a file system
+ - Since docker images have layers and container need to process them docker has different storage drivers which help containers work with image layers.
+ - The container which we built is not running
+
+
+  docker container ls -a -q (Remove all the containers)
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
