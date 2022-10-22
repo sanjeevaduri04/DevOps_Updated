@@ -1,13 +1,9 @@
 
  Docker is a containerization tool
 
-
-
- Docker is a containerization tool
-
--What is Docker and why is it used?
-Docker is a software platform that allows you to build, test, and deploy applications quickly. 
-Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime.
+- What is Docker and why is it used?
+  Docker is a software platform that allows you to build, test, and deploy applications quickly. 
+  Docker packages software into standardized units called containers that have everything the software needs to run including libraries, system tools, code, and runtime.
 
 -Docker made is simple to create containers
 -Consider container as an isolated area with cpu, ram and network which makes application belive that it running on full blown os.
@@ -92,8 +88,7 @@ The command is docker container run -d -P postgres
      - sudo usermod -aG docker <username>
      - # exit and relogin
     
-
-    -------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
 
  Image Building process
  ----------------------
@@ -126,13 +121,12 @@ The command is docker container run -d -P postgres
      docker container ls -a (_this command show the exited container list)
   - Now in this container we have spring petclinic
 
-  - "Now lets create image from container"
+  "Now lets create image from container"
   ---------------------------------------
 
-     docker container commit container_name  (will get the image from container)
-     docker image ls
-
-  - docker image tag 9865hghjt my_image
+     - docker container commit container_name  (will get the image from container)
+     - docker image ls (You are able to see the list of images)
+     - docker image tag 9865hghjt my_image (we can give the tag to the container)
 ---------------------------------------------------------------------------------------------------------------------
 
 Automated Approach
@@ -152,9 +146,8 @@ Sample Dockerfile
     RUN wget https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
     EXPOSE 8080
     CMD ["java", "-jar", "/spring-petclinic-2.4.2.jar"]
----------------------------------------------------------------------------------------------------------------------    
 
-
+---------------------------------------------------------------------------------------------------------------------------------------    
 
 In the above Dockerfile the instructions are
 FROM
@@ -163,13 +156,15 @@ RUN
 EXPOSE
 CMD
 
-
 This Dockerfile when executed with "docker image build -t <image>:<tag>" "<directory with docker file>" (to build an image) will try to create a container based on base image and run all the necessary instructions and creates the image
 
 When we start the container from image whatever is mentioned in CMD/ENTRYPOINT gets executed.
 
-Lets try to create one more application gameoflife. This application requires
 
+Lets try to create one more application gameoflife. This application requires:-
+------------------------------------------------------------------------------ 
+Requirements:-
+------------
 server: tomcat
 runtime: java 8
 port 8080
@@ -178,11 +173,13 @@ Download gameoflife into webapps https://referenceapplicationskhaja.s3.us-west-2
 Refer Here for the tomcat image (https://hub.docker.com/_/tomcat)
 
 
+----------------------------------------------------------------------------------------------------------------------------------------
 FROM tomcat:9.0.64-jdk8-temurin-focal
 LABEL author=khaja
 LABEL why=forfun
 RUN curl https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war --output /usr/local/tomcat/webapps/gameoflife.war
 EXPOSE 8080
+<<<<<<< HEAD
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -285,10 +282,37 @@ Docker inspect provides detailed information on constructs controlled by Docker.
 - lets inspect alpine image docker image inspect alpine:3.0
 - for changeset containing RUN directive and impact on docker image layers
   (https://github.com/asquarezone/DockerZone/commit/1a28d1bcc325e6498564d5eab0c3d37a777c19a2)
+=======
+----------------------------------------------------------------------------------------------------------------------------------------
+
+Lets build to create image:-
+--------------------------
+
+- docker image build -t Learning .
+
+For more info visit link:-
+------------------------
+
+https://directdevops.blog/2022/06/11/devops-classroomnotes-11-jun-2022/
+
+
+---------------------------------------------------------------------------------------------------------------------------
 
 
 
 
+
+
+
+
+
+
+>>>>>>> 45b7a75e53c3d5a4544040eadb2bccc9127c2ab5
+
+
+
+
+<<<<<<< HEAD
 - lets build a new image hello:0.1.2
 ------------------------------------
   
