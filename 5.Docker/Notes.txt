@@ -267,11 +267,10 @@ Docker inspect provides detailed information on constructs controlled by Docker.
 
 - If we use scratch copying the files with kernel and executables is also our responsibility so for this session since we focus on building containers for software applications, choose the base image with necessary files is good choice.
 - Since we have built the image lets inspect it
-  docker image inspect hello:0.1.0
+  
+   -  "docker image inspect hello:0.1.0"
 
 - Now lets take a docker image as parent which has some files in it
-
-
 
 - lets build a new image hello:0.1.1
 ------------------------------------
@@ -285,12 +284,35 @@ Docker inspect provides detailed information on constructs controlled by Docker.
 
 
 - "Docker image is collection of image layers"
+
 - For docker container to work these layers should be combine to form a file system
 - Since docker images have layers and container need to process them docker has different storage drivers which help containers work with image layers.
 - The container which we built is not running
 
+Scenario: Lets build a lamp server based on centos base image:-
+-------------------------------------------------------------
+- Refer Here for the steps, skip the mysql installation part
+- Dockerfile
 
-  docker container ls -a -q (Remove all the containers)
+FROM centos:7
+LABEL purpose="classroom" author="khaja"
+RUN yum install httpd -y && yum install php php-mysql -y && systemctl enable httpd.service
+EXPOSE 80
+CMD ["sleep", "1d"]
 
 
+
+Important Commands
+------------------
+
+  Listing Containers:-
+  ------------------
+  - docker container ls
+  
+  Removing all the containers:-
+  ---------------------------
+  - docker container ls -a -q (Remove all the containers)
+
+For more info:-
+    https://directdevops.blog/2022/06/12/devops-classroomnotes-12-jun-2022/
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
