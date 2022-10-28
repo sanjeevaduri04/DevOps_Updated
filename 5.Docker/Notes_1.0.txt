@@ -1,0 +1,323 @@
+-------------------------------------------------------------------------------------------------------------------------------
+
+ Spring petclinic
+-----------------
+
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ADD https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar /spring-petclinic-2.4.2.jar
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+======================================================================================================================================
+
+game of life:-
+-------------
+
+FROM tomcat:9
+LABEL author="khaja"
+ADD https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
+EXPOSE 8080
+
+-----------------------------------------------------------------------------------------------------------
+
+
+gameoflife with multistage:-
+---------------------------
+
+- To build game of life we need maven with java 8
+- Consider the image maven:3-openjdk-8
+
+docker container run -it maven:3-openjdk-8 /bin/bash
+
+
+To build the application:-
+------------------------
+
+ - git clone https://github.com/wakaleo/game-of-life.git
+ - cd game-of-life
+ - mvn package
+
+------------------------------------------------------------------------------------------------
+
+# Multistage build in Docker
+-----------------------------
+# building the application
+
+FROM maven:3-openjdk-8 AS builder
+RUN git clone https://github.com/wakaleo/game-of-life.git && cd game-of-life && mvn package
+
+
+# application image
+FROM tomcat:9
+LABEL author="khaja"
+ADD https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
+COPY --from=builder /game-of-life/gameoflife-web/target/gameoflife.war /usr/local/tomcat/webapps/gameoflife.war
+EXPOSE 8080
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Springpetclinic Multistage
+--------------------------
+
+- To build spring petcline we need maven with java 11
+- Consider the image maven:3-openjdk-11
+
+ Manual:-
+ ------
+ - docker container run -it maven:3-openjdk-11 /bin/bash
+
+ To build the application:-
+ ------------------------
+git clone https://github.com/spring-projects/spring-petclinic.git
+cd spring-petclinic
+mvn package
+
+----------------------------------------------------------------------------------
+
+# Multistage build in Docker
+# building the application
+FROM maven:3-openjdk-11 AS builder
+RUN git clone https://github.com/spring-projects/spring-petclinic.git && cd spring-petclinic && mvn package
+
+
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ADD https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar /spring-petclinic-2.4.2.jar
+COPY --from=builder /spring-petclinic/target/spring-petclinic-2.7.0-SNAPSHOT.jar /spring-petclinic-2.7.0-SNAPSHOT.jar
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+CMD [ "java", "-jar", "/spring-petclinic-2.7.0-SNAPSHOT.jar" ]
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+OTHER Dockerfile Directives:-
+---------------------------
+
+- ENTRYPOINT: This directive is used to set the executable to started while creating container. For understanding refer Exploring CMD section below.
+- ENV
+- ARG
+- WORKDIR
+- USER
+
+
+Exploring CMD:-
+--------------
+
+- CMD will be executed when we are creating a container.
+- Whatever is written in CMD can be overriten while creating the container by passing the commands after image name.
+
+ docker run container jenkins imagename python 
+
+ Consider the following dockerfile:-
+ ----------------------------------
+ FROM alpine:3.10.4
+ LABEL author="khaja"
+ CMD ["echo", "hello"]
+
+ To build image:-
+ --------------
+
+ - docker image build -t cmdentrypointdemo:0.1 . 
+
+ Now consider the following Dockerfile:-
+ --------------------------------------
+ 
+FROM alpine:3.10.4
+LABEL author="khaja"
+ENTRYPOINT [ "echo" ]
+CMD ["hello"]
+
+
+ - docker image build -t cmdentrypointdemo:0.2 . 
+
+ The output will be.
+
+ - docker container run cmdentrypointdemo:0.2 
+    hello
+
+ - docker container run cmdentrypointdemo:0.2 pwd
+     pwd
+
+ - docker container run cmdentrypointdemo:0.2 docker class
+    docker class
+
+-------------------------------------------------
+ Exploring ARG
+   - Consider the following Dockerfile
+
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ADD https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar /spring-petclinic-2.4.2.jar
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+---
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ARG SOURCE_JAR_LOCATION=https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+ADD  ${SOURCE_JAR_LOCATION} /spring-petclinic-2.4.2.jar
+ENV TESTING="FUN"
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+---
+
+Now build the image
+- docker image build -t demo:0.1 .
+
+
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ARG SOURCE_JAR_LOCATION=https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+ARG DESTINATION="/spring-petclinic-2.4.2.jar"
+ADD  ${SOURCE_JAR_LOCATION} ${DESTINATION}
+ENV DESTINATION=${DESTINATION}
+RUN echo "ENV: ${TESTING}, ARG ${SOURCE_JAR_LOCATION}"
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+
+------------------------------------------------------------------
+
+- ARGS can be passed while building the image whereas ENV can be passed while creating the container
+
+- Note: If you need to change a varible during image build time as well as during CONTAINER CREATION
+
+LABEL project="qtdevops"
+ARG SOURCE_JAR_LOCATION=https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+ADD  ${SOURCE_JAR_LOCATION} /spring-petclinic-2.4.2.jar
+ENV TESTING="FUN"
+ARG TESTING="FUN"
+ENV TESTING=${TESTING}
+RUN echo "ENV: ${TESTING}, ARG ${SOURCE_JAR_LOCATION}"
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+--------------------------------------------------------------------------------------------------------------
+
+One possible use case is to download the file to any location
+
+FROM openjdk:11
+LABEL author="khaja"
+LABEL project="qtdevops"
+ARG SOURCE_JAR_LOCATION=https://referenceapplicationskhaja.s3.us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+ARG DESTINATION="/spring-petclinic-2.4.2.jar"
+ADD  ${SOURCE_JAR_LOCATION} ${DESTINATION}
+ENV DESTINATION=${DESTINATION}
+RUN echo "ENV: ${TESTING}, ARG ${SOURCE_JAR_LOCATION}"
+EXPOSE 8080
+CMD [ "java", "-jar", "/spring-petclinic-2.4.2.jar" ]
+
+Conclusion: Arguments are used to define the variables in your docker file.
+
+================================================================================================================================
+
+
+Docker Image Layers and Containers :-
+----------------------------------
+
+- Every container created has one R/W Layer added
+- All the changes made by container are in R/W layer
+- Now lets assume we have created mysql in a container. All the db updates will be present in the Thin R/W layer and if we delete mysql contaier we loose all the changes i.e. we loose data
+- We need to have some way to preserve this data created by containers i.e. life time of the data should be independent of the container.
+
+
+Docker Volumes:-
+---------------
+
+- https://directdevops.blog/2022/06/18/devops-classroomnotes-18-jun-2022/
+
+
+Command to login into the container:-
+------------------------------------
+
+- docker container exec -it 694925768344 /bin/bash (By using this command we can log into the container)
+  we can see # (It is the sign that we are inside the container)
+
+------------------------------------------------------------------------------------
+
+Bind mounts:-
+-------------
+---------------------------------------------------------------------------------------
+- mkdir tools
+- touch tools/{1..20}.txt
+- ls tools/
+- docker container run -it -v /home/ubuntu/tools --name alp1 alphine /bin/sh
+
+--------------------------------------------------------------------------------------
+
+- docker volume ls 
+- docker volume create my-tools
+- docker volume inspect my-tools
+- docker container run --name alp2 -d -v  my-tools:/tools alphine sleep 1d
+
+--------------------------------------------------------------------------------------
+
+
+- Lets try to create a database container. docker container run -d --name mysql1 -P -e MYSQL_ROOT_PASSWORD=rootroot -e MYSQL_DATABASE=employees mysql:8
+
+----------------------------------------------------------------------------------------------
+
+- docker volume create mysql-employees
+- docker container run -d --name mysql1 -P -e MYSQL_ROOT_PASSWORD=rootroot -e MYSQL_DATABASE=employees --mount type=volume,src=mysql-employees,target=/var/lib/mysql mysql:8
+
+---------------------------------------------------------------------------------------------
+
+To connect to mysql without workbench use phymyadmin:-
+- docker container run --name myadmin -d -e PMA_HOST=172.17.0.2 -e PMA_USER=root -e PMA_PASSWORD=rootroot -p 8080:80 phpmyadmin
+
+
+For more info:-
+-------------
+
+- https://directdevops.blog/2022/06/19/devops-classroomnotes-19-jun-2022/
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+CMD ["/usr/bin/dotnet", "/Nop/Nop.Web.dll"]
+
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+ADD wget https://github.com/nopSolutions/nopCommerce/releases/download/release-4.50.3/nopCommerce_4.50.3_NoSource_linux_x64.zip /Nop/nopCommerce_4.50.3_NoSource_linux_x64.zip
+RUN apt update && apt install unzip -y && mkdir /Nop/bin && mkdir /Nop/logs
+WORKDIR /Nop
+EXPOSE 80
+CMD ["/usr/bin/dotnet", "/Nop/Nop.Web.dll"] 
+
+
+-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
