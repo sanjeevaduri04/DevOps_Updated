@@ -2,3 +2,6 @@
  Git is very popular tool
  Git is a version control tool 
 
+To understand how git works we will be using some plumbing commands of git.
+git cat-file -t <id> # to know the type
+git cat-file -p <id> # to know the contents
