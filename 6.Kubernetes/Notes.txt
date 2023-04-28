@@ -1,2 +1,46 @@
 
   Kubernetes is a container orchestration tool
+
+
+ 1st Generation:-
+ ---------------
+
+  Monolith method:-
+  ----------------
+- What is Monolith
+- This is a unit of deployment, where all the functionality of the system has to be deployed together
+  Single Process Monolith.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+  2nd Generation:-
+  ---------------
+  Modular method:-
+  ----------------
+ - Modular Monolith: Subset of Single Process Monolith
+
+ Challanges:
+ - The whole application has to be deployed and the necessary changes in the database also should be up to the mark
+ - When there is load on some part/module of your application and you need to scale the whole application.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+  3rd Generation:-
+  ---------------
+
+ What are micro services
+ - Microservices are independently deployable services modelled around business domain.
+ - These microservices communicate with each other via networks
+ - Each service can be developed in a differnt programming language as the communications between microservices are generally over http
+ 
+
+ Challenges:
+
+ - Microservices are distributed systems, so managing the application is more complex than a monolith
+ - For deploying the applications which are microservices and handling challenges, we would require an orchestration software and kubernetes is best player in this area.
+ 
+                              To overcome this problem  kubernetes came into picture.
+
+ -------------------------------------------------------------------------------------------------------------------------------------------
+
+https://directdevops.blog/2022/06/29/devops-classroomnotes-29-jun-2022/
+
