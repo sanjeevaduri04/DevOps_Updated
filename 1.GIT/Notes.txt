@@ -1,15 +1,65 @@
 
- Git is very popular tool
- Git is a version control tool 
- Git is a Distributed Version Control System
+1) What is Git?
+
+Git is a widely used distributed version control system for tracking changes in source code during software development. It allows multiple developers to collaborate on a project simultaneously, keeping track of all changes made to the codebase over time. Git is popular among developers because of its efficiency, speed, and robust branching model.
+
+Here are some key concepts related to Git:
+
+Repository:
+
+A repository, or repo, is a collection of files and folders associated with a project, along with the version history of those files.
+
+Commit: 
+
+A commit is a snapshot of changes made to the files in a repository at a specific point in time. Each commit has a unique identifier (hash) and includes a commit message that describes the changes.
+
+Branch: 
+
+A branch is a parallel version of the repository, allowing developers to work on features or fixes independently without affecting the main codebase. Branches are lightweight and can be created, merged, or deleted easily.
+
+Merge: 
+
+Merging is the process of combining changes from one branch (source branch) into another (target branch). This is typically done to incorporate new features or bug fixes into the main codebase.
+
+Pull Request (PR):
+
+ A pull request is a request to merge changes from one branch into another. It allows team members to review the proposed changes, discuss them, and provide feedback before merging them into the main branch.
+
+Remote Repository: 
+
+A remote repository is a copy of the repository hosted on a remote server, such as GitHub, GitLab, or Bitbucket. Developers can push changes to and pull changes from the remote repository to collaborate with others.
+
+Overall, Git simplifies collaboration among developers, helps track changes effectively, and facilitates project management in software development workflows.
  
- what's the difference? Git & Git Hub
- "Git" is a version control system that lets you manage and keep track of your source code history. 
+=======================================================================================================
+
+2) what are the difference between Git & GitHub?
+
+ Git and GitHub are related but serve different purposes:
+
+Git:
+----
+
+Git is a distributed version control system (DVCS) that is used to track changes in source code during software development.
+It is a command-line tool that runs on your local machine and allows you to create repositories, track changes, create branches, merge changes, and collaborate with others.
+Git operates locally on your computer, which means you can work offline and commit changes to your local repository without needing an internet connection.
+
+
+GitHub:
+------
+
+GitHub is a web-based hosting service for Git repositories.
+It provides a platform for collaboration and allows developers to store their Git repositories remotely on GitHub's servers.
+GitHub offers features such as issue tracking, pull requests, project management tools, code review, and collaboration features like wikis and discussions.
+GitHub also provides a graphical user interface (GUI) for interacting with Git repositories, making it more accessible to users who prefer not to use the command line.
+It's important to note that while GitHub is a popular platform for hosting Git repositories, there are other alternatives such as GitLab and Bitbucket that offer similar services.
+In summary, Git is the version control system itself, while GitHub is a hosting service for Git repositories that provides additional collaboration and project management features. 
+You can use Git without GitHub, but GitHub provides a convenient platform for hosting and collaborating on Git repositories.
  
- "GitHub" is a cloud-based hosting service that lets you manage Git repositories. If you have open-source projects that use Git, then GitHub is designed to help you better manage them.
+
+ =======================================================================================================
  
- 
- differnce between github & gitlb
+ differnce between github & gitlab
  
  https://www.upgrad.com/blog/github-vs-gitlab-difference-between-github-and-gitlab/
  
@@ -53,8 +103,11 @@
  git config --global core.excludgesfile [file] --> System wide ignore patern for all local repositories
  ==============================================================================================================
  
- SHARE & UPDTE   Retrieving updates from another repository and updating local repository 
+ SHARE & UPDATE   
  ------------
+
+ Retrieving updates from another repository and updating local repository 
+ 
  
  git remote add [alias] [url] --> dd a git URL as an alias
  
@@ -71,18 +124,19 @@
  ================================================================================
  
  REWRITE HISTORY 
- ----------------     Rewriting branches, updting commits and clearing history 
- 
+ ----------------     
+ Rewriting branches, updting commits and clearing history 
  
  git rebase --> ply any commits of curent branch ahead od specified one
  
- git resey --hard [commit] --.clear staging area, rewrite working tree from specified commit.
+ git reset --hard [commit] --.clear staging area, rewrite working tree from specified commit.
  
  =================================================================================================
  
  
  TEMPORARY COMMITS
- -----------------  Temporary store modified, trcked file in order to change branches
+ -----------------  
+ Temporary store modified, trcked file in order to change branches
  
  git stash --> Save modified and stged changes
  
