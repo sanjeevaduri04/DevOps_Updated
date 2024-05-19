@@ -1,0 +1,132 @@
+# Parametarized jenkins declarative pipeline with unittest stage and sonarqube stage and nexus stage
+
+ Here's an example of a parameterized Jenkins declarative pipeline that includes stages for unit tests, 
+ SonarQube analysis, and Nexus artifact deployment. This setup allows you to specify the Git branch,
+  whether to run tests, the deployment environment, and includes stages for code quality analysis and 
+  artifact deployment.
+
+  ------------------------------------
+  pipeline {
+    agent any
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'The Git branch to build')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Should the tests run?')
+        choice(name: 'DEPLOY_ENV', choices: ['development', 'staging', 'production'], description: 'Deployment environment')
+        string(name: 'SONARQUBE_PROJECT_KEY', defaultValue: 'my-project', description: 'SonarQube project key')
+        string(name: 'NEXUS_REPO_URL', defaultValue: 'http://nexus.example.com/repository/maven-releases/', description: 'Nexus repository URL')
+    }
+    environment {
+        // Define environment variables for SonarQube and Nexus credentials
+        SONARQUBE_SCANNER_HOME = tool 'SonarQube Scanner'
+        NEXUS_CREDENTIALS_ID = 'nexus-credentials-id'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the specified branch
+                git branch: params.BRANCH_NAME, url: 'https://github.com/your-repo.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "Building the project from branch: ${params.BRANCH_NAME}"
+                // Add your build steps here, e.g., compile code, create artifacts
+                sh 'make build' // Example build command
+            }
+        }
+        stage('Unit Tests') {
+            when {
+                expression { return params.RUN_TESTS }
+            }
+            steps {
+                echo 'Running unit tests...'
+                // Add your unit test steps here, e.g., run unit tests
+                sh 'make test' // Example test command
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // Run SonarQube analysis
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${env.SONARQUBE_SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${params.SONARQUBE_PROJECT_KEY}"
+                    }
+                }
+            }
+        }
+        stage('Deploy to Nexus') {
+            steps {
+                echo "Deploying artifacts to Nexus at ${params.NEXUS_REPO_URL}"
+                // Add your Nexus deployment steps here, e.g., upload artifacts
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: 'nexus.example.com',
+                    groupId: 'com.mycompany.myapp',
+                    version: '1.0.0',
+                    repository: 'maven-releases',
+                    credentialsId: env.NEXUS_CREDENTIALS_ID,
+                    artifacts: [
+                        [artifactId: 'my-app', classifier: '', file: 'target/my-app-1.0.0.jar', type: 'jar']
+                    ]
+                )
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed.'
+        }
+    }
+}
+
+---------------------------
+
+Explanation
+Parameters Block:
+
+BRANCH_NAME: Specifies the Git branch to build.
+RUN_TESTS: Boolean parameter to decide whether to run unit tests.
+DEPLOY_ENV: Choice parameter for selecting the deployment environment.
+SONARQUBE_PROJECT_KEY: SonarQube project key for code analysis.
+NEXUS_REPO_URL: URL of the Nexus repository for artifact deployment.
+Environment Variables:
+
+SONARQUBE_SCANNER_HOME: Path to the SonarQube scanner tool.
+NEXUS_CREDENTIALS_ID: ID of the credentials for accessing Nexus (configured in Jenkins credentials).
+Stages:
+
+Checkout: Checks out the code from the specified Git branch.
+Build: Builds the project and outputs a message indicating the branch being built.
+Unit Tests: Runs unit tests if the RUN_TESTS parameter is true.
+SonarQube Analysis: Runs a SonarQube analysis using the specified project key.
+Deploy to Nexus: Deploys artifacts to the specified Nexus repository.
+Post Block:
+
+always: Ensures a message is printed when the pipeline finishes, regardless of the outcome.
+success: Prints a message if the pipeline completes successfully.
+failure: Prints a message if the pipeline fails.
+Running the Pipeline
+When this pipeline is executed, Jenkins will prompt the user to enter values for the parameters. This
+ allows customization of the build, testing, analysis, and deployment processes without modifying the 
+ Jenkinsfile.
+
+Summary
+This parameterized Jenkins declarative pipeline example includes stages for unit tests, SonarQube 
+analysis, and Nexus artifact deployment. It demonstrates how to use parameters to create a flexible and 
+reusable CI/CD process, enhancing the pipeline's adaptability to different scenarios.
+
+
+
+
+
+
+
+
+
