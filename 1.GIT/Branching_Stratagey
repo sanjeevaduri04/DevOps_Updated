@@ -1,0 +1,11 @@
+ Feature branch (to Develop new branches)
+
+ Develop branch (All Developers Push their branches in Develop and test engineer test it)
+
+ Master branch (LUAT)
+
+ Release branch (Freeze the changes) Release always done from release branch
+
+ Hot fix branches (Merged in both master and Release branch)
+
+ 
