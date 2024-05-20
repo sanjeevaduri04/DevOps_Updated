@@ -1,0 +1,105 @@
+kubernetes architecture
+
+Kubernetes is an open-source platform designed to automate the deployment, scaling, and operation of
+application containers. Its architecture consists of several key components that work together to
+manage containerized applications across a cluster of machines. Here's an overview of the Kubernetes
+architecture:
+
+1. Master Node
+
+The master node is responsible for managing the Kubernetes cluster. It runs the control plane
+components, which make global decisions about the cluster (e.g., scheduling), as well as detecting and 
+responding to cluster events (e.g., starting up a new pod when a deployment's replicas field is 
+ unsatisfied).
+
+ API Server (kube-apiserver): 
+
+ The API server is the front end of the Kubernetes control plane. It exposes the Kubernetes API,
+ which is used by all components to communicate with each other and manage the state of the cluster.
+
+ Scheduler (kube-scheduler):
+ 
+ The scheduler watches for newly created pods that have no node assigned and
+ selects a node for them to run on based on resource requirements, policy constraints, and other factors.
+
+ Controller Manager (kube-controller-manager): 
+
+ This component runs various controllers that handle routine tasks in the cluster. Key controllers 
+ include the Replication Controller, Endpoints Controller, Namespace Controller, and others.
+
+ etcd:
+ 
+ A distributed key-value store that Kubernetes uses to store all its cluster data. It is the central 
+ hub for storing configuration data, service discovery information, and state management.
+
+ 2. Worker Nodes (Minions)
+
+Worker nodes are the machines where the containerized applications (workloads) run. Each worker node 
+has the necessary services to run and manage the pods.
+
+Kubelet: 
+
+An agent that runs on each worker node. It ensures that containers are running in a pod. 
+It communicates with the master node's API server to receive commands and work instructions.
+
+Kube-proxy: 
+
+This component maintains network rules on nodes. These rules allow network communication 
+to your pods from network sessions inside or outside of your cluster. It performs connection forwarding 
+and load balancing.
+
+Container Runtime:
+
+The software that is responsible for running containers. Kubernetes supports several
+runtimes, such as Docker, containerd, and CRI-O.
+
+3. Pods
+
+Pods are the smallest and simplest Kubernetes objects. They represent a single instance of a running 
+process in a cluster and contain one or more containers. Pods are the units of deployment in Kubernetes,
+and each pod has a unique IP address.
+
+4. Additional Components
+DNS (kube-dns or CoreDNS): Provides DNS service for Kubernetes clusters, enabling pods and services to
+discover each other by name.
+
+Ingress Controllers:
+ Manage external access to the services in a cluster, typically HTTP. Ingress
+ controllers route and load balance traffic to the appropriate services based on defined rules.
+
+Helm: 
+
+A package manager for Kubernetes that helps in managing Kubernetes applications. Helm charts define,
+ install, and upgrade even the most complex Kubernetes applications.
+
+ 5. Networking
+
+Kubernetes networking allows communication between components and applications. Key networking 
+components include:
+
+Cluster IPs: Internal IP addresses used by services.
+NodePorts: Expose services on each node’s IP at a static port.
+LoadBalancers: Expose services externally using a cloud provider's load balancer.
+
+6. Storage
+
+Kubernetes abstracts storage using Persistent Volumes (PV) and Persistent Volume Claims (PVC):
+
+Persistent Volumes (PV): A piece of storage in the cluster that has been provisioned by an administrator
+ or dynamically provisioned using Storage Classes.
+Persistent Volume Claims (PVC): A request for storage by a user. PVCs are bound to PVs.
+
+Summary
+Kubernetes architecture is designed to be robust, scalable, and modular, facilitating automated 
+container management. The master node manages the cluster state and scheduling, while worker nodes run
+ the containerized applications. Through its various components, Kubernetes provides a unified platform 
+ to manage containerized applications at scale.
+
+
+
+
+
+
+
+
+
