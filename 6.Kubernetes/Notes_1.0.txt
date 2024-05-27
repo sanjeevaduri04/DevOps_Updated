@@ -95,6 +95,39 @@ container management. The master node manages the cluster state and scheduling, 
  the containerized applications. Through its various components, Kubernetes provides a unified platform 
  to manage containerized applications at scale.
 
+ ==============================================================================
+
+ Kubernetes Feature:-
+ ------------------
+
+ - Compute scheduling
+  
+ - Self-healing
+
+ - Horizantal scaling
+
+ - volume management
+
+ - Networking
+
+ - Upgrade (Round robin method)
+
+ - Application management
+
+ ---------------------
+
+ Challenges:
+
+ - While upgrade (We have plan with doc)
+
+ - ImagePullBackOff
+
+ - Crashloopbackoff due to  OOM  (Resource Quotas)
+
+ - Statefulset with persistantvolume is
+   not working
+ 
+
 
 
 

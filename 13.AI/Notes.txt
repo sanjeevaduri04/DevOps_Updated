@@ -1,0 +1,37 @@
+Important AI tools for DevOps
+
+1) chatgpt:
+
+  ChatGPT is an AI language model developed by OpenAI. It is part of the GPT
+ (Generative Pre-trained Transformer) family of models, specifically designed to understand and generate
+  human-like text based on the input it receives.
+
+2) GitHub Copilot:
+
+  An AI tool for developers to assist with code writing and completion.
+
+3) Microsoft Copilot:
+
+   Microsoft Copilot refers to a suite of AI-powered tools integrated into Microsoft 365 applications, 
+   designed to enhance productivity and streamline workflows by leveraging advanced machine learning
+   models.
+
+4)AWS CodeGuru:
+
+   AWS CodeGuru is a developer tool from Amazon Web Services (AWS) designed to help developers improve
+   their code quality and optimize application performance. It comprises two main components: CodeGuru
+   Reviewer and CodeGuru Profiler.
+
+5) sysdig:
+
+ Sysdig is an open-source monitoring, security, and troubleshooting tool designed specifically for 
+ containerized environments, such as those orchestrated by Kubernetes and Docker. It provides deep 
+ visibility into system and application behavior by capturing and analyzing system calls, network 
+ traffic, and other events.
+
+6) Harness:
+
+Harness is a software delivery platform designed to automate the process of deploying applications and
+managing continuous integration and continuous delivery (CI/CD) pipelines. It aims to simplify and 
+accelerate the software release process while ensuring reliability, security, and efficiency. 
+
