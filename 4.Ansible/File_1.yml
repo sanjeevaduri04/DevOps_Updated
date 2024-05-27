@@ -1,0 +1,28 @@
+# install_packages_with_handlers.yml
+# install multi apt packages
+---
+- name: Install multiple apt packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install multiple packages
+      apt:
+        name:
+          - curl
+          - git
+          - vim
+          - htop
+          - tree
+        state: present
+      notify: Restart apache2
+
+  handlers:
+    - name: Restart apache2
+      service:
+        name: apache2
+        state: restarted
