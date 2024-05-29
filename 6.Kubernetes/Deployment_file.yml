@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: your-java-app-deployment
+  namespace: your-namespace
+  labels:
+    app: your-java-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: your-java-app
+  template:
+    metadata:
+      labels:
+        app: your-java-app
+    spec:
+      containers:
+      - name: your-java-app
+        image: your-docker-repo/your-java-app:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JAVA_OPTS
+          value: "-Xms256m -Xmx512m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      imagePullSecrets:
+      - name: your-docker-registry-secret
