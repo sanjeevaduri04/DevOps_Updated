@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "your-docker-repo/your-app:${env.BUILD_ID}"
+        KUBERNETES_NAMESPACE = "your-namespace"
+        KUBERNETES_DEPLOYMENT = "your-deployment"
+        DOCKER_CREDENTIALS_ID = "your-docker-credentials-id"
+        KUBECONFIG_CREDENTIALS_ID = "your-kubeconfig-credentials-id"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    // Assuming Maven is used for building the Java application
+                    sh 'mvn clean package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Push the Docker image to the Docker registry
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        sh "docker push ${DOCKER_IMAGE}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBECONFIG_CREDENTIALS_ID, variable: 'KUBECONFIG')]) {
+                        // Set the kubeconfig environment variable
+                        sh 'export KUBECONFIG=$KUBECONFIG'
+                        
+                        // Update the Kubernetes deployment
+                        sh """
+                            kubectl set image deployment/${KUBERNETES_DEPLOYMENT} -n ${KUBERNETES_NAMESPACE} \
+                            ${KUBERNETES_DEPLOYMENT}=${DOCKER_IMAGE} --record
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
