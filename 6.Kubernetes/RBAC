@@ -1,0 +1,50 @@
+
+Role-Based Access Control (RBAC) in Kubernetes is a method for controlling access to the resources
+in a Kubernetes cluster based on the roles assigned to individual users or groups. RBAC enables
+administrators to define granular permissions, ensuring that users only have access to the resources 
+and actions that are necessary for their tasks.
+
+In Kubernetes, RBAC consists of three primary components:
+
+Role: A Role defines a set of permissions within a specific namespace. It allows you to specify what 
+actions (verbs) are allowed on which resources (API objects) within that namespace.
+
+RoleBinding: A RoleBinding binds a Role to one or more users, groups, or service accounts.
+ It associates the Role's permissions with the specified subjects, thereby granting them access to the 
+ resources defined by the Role.
+
+ClusterRole: Similar to a Role, but it operates at the cluster level rather than within a specific
+ namespace. It defines a set of permissions that apply across the entire cluster.
+
+ClusterRoleBinding: This binds a ClusterRole to users, groups, or service accounts across the 
+entire cluster.
+
+1) Create a Role named "read-only" that allows the "get" verb on pods and services:
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: development
+  name: read-only
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services"]
+  verbs: ["get"]
+
+ 2) Create a RoleBinding that binds the "read-only" Role to a specific group of users
+    (e.g., "developers"):
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: read-only-binding
+  namespace: development
+subjects:
+- kind: Group
+  name: developers
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: read-only
+  apiGroup: rbac.authorization.k8s.io
+ 
