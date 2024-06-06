@@ -1,0 +1,22 @@
+#! /bin/bash
+
+i=1
+while  [ $i -lt 100 ]
+do
+    ((i++))
+    echo "$i"
+done
+
+-----------------------------------
+
+
+#! /bin/bash
+
+read 
+
+if [ age == 18 ]
+ then
+ echo "Eligible for vote"
+ else 
+ echo "Not Eligible for vote"
+ fi
